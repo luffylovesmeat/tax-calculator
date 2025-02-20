@@ -13,9 +13,12 @@ export const calculateTaxFY2025_26 = (
   effectiveRate: number
   effectiveSalary: number
   slabBreakdown: SlabBreakdown[]
+  standardDeduction: number
+  cess: number
 } => {
+  const standardDeduction = 75000
   let tax = 0
-  let remainingSalary = salary
+  let remainingSalary = salary - standardDeduction
   const slabBreakdown: SlabBreakdown[] = []
 
   const slabs = [
@@ -54,8 +57,17 @@ export const calculateTaxFY2025_26 = (
     slabBreakdown.forEach((slab) => (slab.taxForSlab = 0))
   }
 
-  const effectiveRate = (tax / salary) * 100
-  const effectiveSalary = salary - tax
+  const cess = (tax / 100) * 4
 
-  return { tax, effectiveRate, effectiveSalary, slabBreakdown }
+  const effectiveRate = ((tax + cess) / salary) * 100
+  const effectiveSalary = salary - (tax + cess)
+
+  return {
+    tax,
+    effectiveRate,
+    effectiveSalary,
+    slabBreakdown,
+    standardDeduction,
+    cess,
+  }
 }

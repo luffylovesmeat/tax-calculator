@@ -17,6 +17,8 @@ export default function TaxCalculator() {
       effectiveRate: number
       effectiveSalary: number
       slabBreakdown: SlabBreakdown[]
+      standardDeduction: number
+      cess: number
     }[]
   >([])
 
@@ -32,9 +34,23 @@ export default function TaxCalculator() {
 
   const calculateTaxes = () => {
     const newResults = salaries.map((salary) => {
-      const { tax, effectiveRate, effectiveSalary, slabBreakdown } =
-        calculateTaxFY2025_26(salary)
-      return { salary, tax, effectiveRate, effectiveSalary, slabBreakdown }
+      const {
+        tax,
+        effectiveRate,
+        effectiveSalary,
+        slabBreakdown,
+        standardDeduction,
+        cess,
+      } = calculateTaxFY2025_26(salary)
+      return {
+        salary,
+        tax,
+        effectiveRate,
+        effectiveSalary,
+        slabBreakdown,
+        standardDeduction,
+        cess,
+      }
     })
     setResults(newResults)
   }
@@ -71,9 +87,36 @@ export default function TaxCalculator() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <p className="flex justify-between">
+                        <span>Taxable Income:</span>
+                        <span className="font-semibold">
+                          ₹
+                          {(
+                            result.salary - result.standardDeduction
+                          ).toLocaleString()}
+                        </span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span>Standard Deduction:</span>
+                        <span className="font-semibold">
+                          ₹{result.standardDeduction.toLocaleString()}
+                        </span>
+                      </p>
+                      <p className="flex justify-between">
                         <span>Tax:</span>
                         <span className="font-semibold">
                           ₹{result.tax.toLocaleString()}
+                        </span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span>CESS (4%):</span>
+                        <span className="font-semibold">
+                          ₹{result.cess.toLocaleString()}
+                        </span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span>Total Tax:</span>
+                        <span className="font-semibold">
+                          ₹{(result.cess + result.tax).toLocaleString()}
                         </span>
                       </p>
                       <p className="flex justify-between">
