@@ -16,10 +16,11 @@ export const calculateTaxFY2025_26 = (
   standardDeduction: number
   cess: number
 } => {
-  const standardDeduction = 75000
+  const standardDeduction = 75_000
   let tax = 0
   let remainingSalary = salary - standardDeduction
   const slabBreakdown: SlabBreakdown[] = []
+  const taxFreeSlab = 1_200_000 + standardDeduction
 
   const slabs = [
     { limit: 400000, rate: 0 },
@@ -52,7 +53,7 @@ export const calculateTaxFY2025_26 = (
   }
 
   // Applying rebate for income up to 12 Lakhs
-  if (salary <= 1200000) {
+  if (salary <= taxFreeSlab) {
     tax = 0
     slabBreakdown.forEach((slab) => (slab.taxForSlab = 0))
   }
